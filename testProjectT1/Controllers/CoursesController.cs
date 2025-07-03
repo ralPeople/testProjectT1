@@ -71,5 +71,36 @@ namespace testProjectT1.Controllers
 
             return Ok(result);
         }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteCourse(Guid id)
+        {
+            Course course = await _context.Courses
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (course == null)
+            {
+                return StatusCode(404, "Курс не найден");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                _context.Courses.Remove(course);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return NoContent();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+
+
+                return StatusCode(500, "Ошибка при удалении курса");
+
+            }
+        }
     }
 }
