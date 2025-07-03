@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using testProjectT1.DB.Objects.Course;
-using testProjectT1.DB.Objects.Student;
+using testProjectT1.DB.Objects.oCourse;
+using testProjectT1.DB.Objects.oStudent;
 namespace testProjectT1.DB
 {
     public class ApplicationDbContext : DbContext
