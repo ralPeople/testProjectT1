@@ -14,7 +14,6 @@ namespace testProjectT1.DB.Objects.oStudent
 
         [ForeignKey("Course")]
         public Guid CourseId { get; set; }
-        public Course Course { get; set; }
         
 
     }

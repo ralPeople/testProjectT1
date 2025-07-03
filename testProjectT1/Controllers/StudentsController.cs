@@ -18,7 +18,7 @@ namespace testProjectT1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddStudent(Guid id, [FromBody] CreateStudent dto)
+        public async Task<IActionResult> AddStudent(Guid id, [FromBody] CreateStudent request)
         {
             var courseExists = await _context.Courses.AnyAsync(course => course.Id == id);
             if (!courseExists)
@@ -26,7 +26,7 @@ namespace testProjectT1.Controllers
 
             var student = new Student
             {
-                FullName = dto.FullName,
+                FullName = request.FullName,
                 CourseId = id
             };
 
