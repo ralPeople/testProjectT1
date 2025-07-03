@@ -10,11 +10,11 @@ namespace testProjectT1.Controllers
     [Route("courses")]
     public class CoursesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext context;
 
         public CoursesController(ApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         [HttpPost]
@@ -30,11 +30,11 @@ namespace testProjectT1.Controllers
             };
 
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
-                _context.Courses.Add(course);
-                await _context.SaveChangesAsync();
+                context.Courses.Add(course);
+                await context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
 
@@ -48,14 +48,12 @@ namespace testProjectT1.Controllers
                 return StatusCode(500, "Ошибка при создании курса");
 
             }
-
-            
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllCourses()
         {
-            List<Course> courses = await _context.Courses
+            List<Course> courses = await context.Courses
                 .Include(c => c.Students)
                 .ToListAsync();
 
@@ -75,7 +73,7 @@ namespace testProjectT1.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
-            Course course = await _context.Courses
+            Course course = await context.Courses
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (course == null)
@@ -83,11 +81,11 @@ namespace testProjectT1.Controllers
                 return StatusCode(404, "Курс не найден");
             }
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
-                _context.Courses.Remove(course);
-                await _context.SaveChangesAsync();
+                context.Courses.Remove(course);
+                await context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
 

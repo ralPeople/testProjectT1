@@ -10,17 +10,17 @@ namespace testProjectT1.Controllers
     [Route("courses/{id:guid}/students")]
     public class StudentsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext context;
 
         public StudentsController(ApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddStudent(Guid id, [FromBody] CreateStudent request)
         {
-            var courseExists = await _context.Courses.AnyAsync(course => course.Id == id);
+            var courseExists = await context.Courses.AnyAsync(course => course.Id == id);
             if (!courseExists)
                 return NotFound($"Курс {id} не найден.");
 
@@ -30,11 +30,11 @@ namespace testProjectT1.Controllers
                 CourseId = id
             };
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
-                _context.Students.Add(student);
-                await _context.SaveChangesAsync();
+                context.Students.Add(student);
+                await context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
 
